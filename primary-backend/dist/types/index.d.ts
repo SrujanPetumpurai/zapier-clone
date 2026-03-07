@@ -1,16 +1,14 @@
-import { z } from 'zod';
+import { z } from "zod";
 export declare const SignupSchema: z.ZodObject<{
-    email: z.ZodString;
+    username: z.ZodString;
     password: z.ZodString;
     name: z.ZodString;
 }, z.core.$strip>;
 export declare const SigninSchema: z.ZodObject<{
-    email: z.ZodString;
+    username: z.ZodString;
     password: z.ZodString;
-    name: z.ZodString;
 }, z.core.$strip>;
-export declare const ZapSchema: z.ZodObject<{
-    name: z.ZodString;
+export declare const ZapCreateSchema: z.ZodObject<{
     availableTriggerId: z.ZodString;
     triggerMetadata: z.ZodOptional<z.ZodAny>;
     actions: z.ZodArray<z.ZodObject<{

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 export const Navbar=()=>{
     const router = useRouter()
     return(
-        <div className='bg-white top-0 pt-2 z-[9999] left-0 fixed w-full flex border h-[65px]   justify-between'>
+        <div className='bg-white top-0 pt-2 z-[9999] left-0 fixed w-full flex border-b-1 h-[65px] justify-between'>
             <div> <svg
                     className="atoms-module_block_md4gSrcu mt-2 ml-6"
                 width="104"

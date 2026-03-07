@@ -11,6 +11,7 @@ const client = new PrismaClient()
 async function main(){
     const producer = kafka.producer();
     await producer.connect();
+    console.log("inside process main function")
     while(1){
         const pendingRows = await client.zapRunOutbox.findMany({
             where:{},
@@ -36,3 +37,5 @@ async function main(){
     }
 
 }
+main();
+ 

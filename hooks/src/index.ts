@@ -1,11 +1,11 @@
 import express from "express"
-import {PrismaClient,Prisma } from "@prisma/client";
-
+import { PrismaClient,Prisma } from "@prisma/client";
+import cors from 'cors'
 const client = new PrismaClient();
 
 const app = express();
+app.use(cors())
 app.use(express.json());
-
 // password logic
 app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     const userId = req.params.userId;
@@ -13,7 +13,8 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     const body = req.body;
 
     // store in db a new trigger
-    await client.$transaction(async (tx:Prisma.TransactionClient) => {
+    try{
+        await client.$transaction(async (tx:Prisma.TransactionClient) => {
         const run = await tx.zapRun.create({
             data: {
                 zap:{connect:{id:zapId}},
@@ -23,13 +24,22 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
 
         await tx.zapRunOutbox.create({
             data: {
-                zapRunId: run.id
+                zapRun:{
+                    connect:{id:run.id}
+                }
             }
         })
     })
     res.json({
         message: "Webhook received"
     })
+    }catch(e){
+        res.json({
+            message:"Unable to trigger the hook"
+        })
+    }
+    
 })
 
 app.listen(3002);
+console.log('listening to 3002')

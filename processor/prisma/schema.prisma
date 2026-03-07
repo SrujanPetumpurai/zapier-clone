@@ -2,7 +2,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -20,6 +19,7 @@ model User{
 
 model Zap{
   id String @id @default(uuid())
+  name String @default("untitled zap")
   trigger Trigger?
   userId Int
   user User @relation(fields:[userId],references: [id])
@@ -27,9 +27,7 @@ model Zap{
   zapRun ZapRun[]
   updatedAt DateTime @updatedAt
   isActive Boolean @default(true)
-  name String @default("untitled zap")
 }
-
 
 model Trigger {
   id          String  @id @default(uuid())
@@ -38,7 +36,7 @@ model Trigger {
   type  AvailableTrigger @relation(fields: [triggerId], references: [id])
   zap  Zap                @relation(fields: [zapId], references: [id])
 }
-
+  
 model AvailableTrigger{
   id String @id @default(uuid())
   name String 
@@ -49,9 +47,9 @@ model AvailableTrigger{
 model Action {
   id        String  @id @default(uuid())
   zapId     String  
-  zap       Zap     @relation(fields: [zapId], references: [id])
   actionId  String
   metadata    Json  @default("{}")
+  zap       Zap     @relation(fields: [zapId], references: [id])
   type      AvailableAction @relation(fields: [actionId], references: [id])
   sortingOrder Int    @default(0)
 }

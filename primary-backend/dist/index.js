@@ -1,20 +1,16 @@
-import express from 'express';
-import { userRouter } from './routes/user.js';
-import { zapsRouter } from './routes/zaps.js';
-import { triggerRouter } from './routes/trigger.js';
-import { actionRouter } from './routes/action.js';
-import cors from 'cors';
+import express from "express";
+import { userRouter } from "./router/user.js";
+import { zapRouter } from "./router/zaps.js";
+import cors from "cors";
+import { triggerRouter } from "./router/trigger.js";
+import { actionRouter } from "./router/action.js";
 const app = express();
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}));
 app.use(express.json());
-app.use('/user', userRouter);
-app.use('/zaps', zapsRouter);
-app.use('/trigger', triggerRouter);
-app.use('/action', actionRouter);
-app.listen(4000, () => {
-    console.log("listening on 4000");
-});
+app.use(cors());
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/zap", zapRouter);
+app.use("/api/v1/trigger", triggerRouter);
+app.use("/api/v1/action", actionRouter);
+app.listen(3000);
+console.log("Listening on 3000");
 //# sourceMappingURL=index.js.map

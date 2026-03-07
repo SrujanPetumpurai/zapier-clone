@@ -1,4 +1,3 @@
-import {Prisma} from '@prisma/client'
 import {Kafka} from 'kafkajs'
 
 const TOPIC_NAME = "zap-events"
@@ -23,8 +22,7 @@ async function main(){
             if(!message.value?.toString()){
                 return;
             }
-            
-
         }
     })
 }
+main().catch(console.error);
