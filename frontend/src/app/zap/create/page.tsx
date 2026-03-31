@@ -42,7 +42,6 @@ export default function() {
         metadata: any;
     }[]>([]);
     const [selectedModalIndex, setSelectedModalIndex] = useState<null | number>(null);
-
     return <div>
         <Appbar />
         <div className="flex justify-end bg-slate-200 p-4">
@@ -67,6 +66,7 @@ export default function() {
                 router.push("/dashboard");
 
             }}>Publish</PrimaryButton>
+            
         </div>
         <div className="w-full min-h-screen bg-slate-200 flex flex-col justify-center">
             <div className="flex justify-center w-full">

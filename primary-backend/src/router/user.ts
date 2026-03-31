@@ -36,7 +36,6 @@ try{
     await prisma.user.create({
         data: {
             email: parsedData.data.username,
-            // TODO: Dont store passwords in plaintext, hash it
             password: hashedPassword,
             name: parsedData.data.name
         }
