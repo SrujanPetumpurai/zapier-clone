@@ -1,8 +1,8 @@
 
-export const BACKEND_URL = "http://localhost:3000"
+export const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000"
 export const HOOKS_URL = "http://localhost:3002"
 export const PROVIDER_CONFIG: Record<string, { connectUrl: string }> = {
-  google: { connectUrl: `${BACKEND_URL}api/v1/google` },
-  github: { connectUrl: `${BACKEND_URL}api/v1/github` },
+  google: { connectUrl: `${BACKEND_URL}/api/v1/google` },
+  github: { connectUrl: `${BACKEND_URL}/api/v1/github` },
   gmail:{connectUrl:`${BACKEND_URL}/api/v1/gmail/auth`}
 }
