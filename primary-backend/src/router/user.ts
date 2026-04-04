@@ -5,7 +5,7 @@ import { SigninSchema, SignupSchema } from "../types/index.js";
 import {prisma} from '../lib/db.js'
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "../config.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const router = Router();
 const saltRounds = 10;
