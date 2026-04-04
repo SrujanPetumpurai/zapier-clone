@@ -9,8 +9,22 @@ import { connectedAccount } from "./router/connectedAccounts.js";
 import { providerRouter } from "./router/provider.js";
 import { gmailRouter } from "./router/gmail.js";
 const app = express();
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  process.env.FRONTEND_URL!,
+];
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
+}))
 
 app.use("/api/v1/user", userRouter);
 
@@ -23,6 +37,7 @@ app.use("/api/v1/action", actionRouter);
 app.use("/api/v1/google",googleRouter)
 app.use("/api/v1/gmail",gmailRouter)
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000);
-console.log("Listening on 3000")
+app.listen(PORT);
+console.log(`Listening on ${PORT}`);

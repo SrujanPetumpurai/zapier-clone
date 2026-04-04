@@ -55,21 +55,17 @@ async function main() {
     ],
     skipDuplicates: true
   })
+  const triggers = [
+    { id: "github_comment",  name: "GitHub - New Comment",      image: "https://github.com/favicon.ico" },
+    { id: "github_push",     name: "GitHub - New Push",         image: "https://github.com/favicon.ico" },
+    { id: "github_pr",       name: "GitHub - New Pull Request", image: "https://github.com/favicon.ico" },
+    { id: "stripe_payment",  name: "Stripe - New Payment",      image: "https://stripe.com/favicon.ico" },
+    { id: "gmail_received",  name: "Gmail - New Email",         image: "https://img.icons8.com/color/1200/gmail-new.jpg" },
+    { id: "schedule",        name: "Schedule",                  image: "https://cdn-icons-png.flaticon.com/512/2693/2693507.png" },
+]
 
   // Available Triggers
-  const webhookTrigger = await prisma.availableTrigger.create({
-    data: {
-      name: 'Webhook',
-      image: 'https://cdn-icons-png.flaticon.com/512/906/906175.png'
-    }
-  })
-
-  const scheduleTrigger = await prisma.availableTrigger.create({
-    data: {
-      name: 'Schedule',
-      image: 'https://cdn-icons-png.flaticon.com/512/2693/2693507.png'
-    }
-  })
+  await prisma.availableTrigger.createMany({data:triggers})
 
   // Available Actions
   const emailAction = await prisma.availableAction.create({
@@ -152,7 +148,7 @@ async function main() {
       userId: user1.id,
       trigger: {
         create: {
-          triggerId: webhookTrigger.id,
+          triggerId:'github_comment',
           metadata: { url: 'https://hooks.example.com/trigger/1' }
         }
       },
@@ -178,7 +174,7 @@ async function main() {
       userId: user2.id,
       trigger: {
         create: {
-          triggerId: scheduleTrigger.id,
+          triggerId: 'github_pr',
           metadata: { cron: '0 9 * * 1' } 
         }
       },
