@@ -1,11 +1,19 @@
 import {PrismaClient} from '@prisma/client'
 import {Kafka} from 'kafkajs'
+
 const TOPIC_NAME = 'zap-events'
 
 const kafka = new Kafka({
-    clientId:"outbox-processor",
-    brokers:['localhost:9092']
+    clientId: "outbox-processor",
+    brokers: [process.env.KAFKA_BROKER!],
+    ssl: true,
+    sasl: {
+        mechanism: 'scram-sha-256',
+        username: process.env.KAFKA_USERNAME!,
+        password: process.env.KAFKA_PASSWORD!,
+    }
 })
+
 const client = new PrismaClient()
 
 async function main(){
@@ -18,24 +26,23 @@ async function main(){
             take:10
         })
         console.log(pendingRows)
-         producer.send({
-            topic:TOPIC_NAME,
-            messages:pendingRows.map((r:any)=>{
+        await producer.send({
+            topic: TOPIC_NAME,
+            messages: pendingRows.map((r:any)=>{
                 return{
-                    value:JSON.stringify({zapRunId:r.zapRunId,stage:0})
+                    value: JSON.stringify({zapRunId: r.zapRunId, stage: 0})
                 }
             })
         })
         await client.zapRunOutbox.deleteMany({
             where:{
                 id:{
-                    in:pendingRows.map((x:any)=>x.id)
+                    in: pendingRows.map((x:any) => x.id)
                 }
             }
         })
         await new Promise(r => setTimeout(r, 3000));
     }
-
 }
+
 main();
- 
