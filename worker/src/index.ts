@@ -6,10 +6,15 @@ import { sendEmail } from './email.js';
 import { sendSol } from './solana.js';
 const TOPIC_NAME = "zap-events"
 const kafka = new Kafka({
-    clientId:'kafka-consumer',
-    brokers:['localhost:9092']
+    clientId: 'kafka-consumer',
+    brokers: [process.env.KAFKA_BROKER!],
+    ssl: true,
+    sasl: {
+        mechanism: 'scram-sha-256',
+        username: process.env.KAFKA_USERNAME!,
+        password: process.env.KAFKA_PASSWORD!,
+    }
 })
-
 const prismaClient = new PrismaClient();
 async function main(){
     const consumer = kafka.consumer({groupId:'main-woker'})
@@ -67,9 +72,9 @@ async function main(){
                     console.log("Missing email or body template in action metadata");
                     return;
                 }
-
-                const to = parse(emailTemplate, { comment: zapRunMetadata });
-                const body = parse(bodyTemplate, { comment: zapRunMetadata });
+                const templateContext = {data:zapRunMetadata}
+                const to = parse(emailTemplate, {templateContext });
+                const body = parse(bodyTemplate, { templateContext });
                 console.log(`Sending email ${to} with body ${body}`)
                 await sendEmail(to, body, userId);
                 }
@@ -98,7 +103,7 @@ async function main(){
           await consumer.commitOffsets([{
             topic: TOPIC_NAME,
             partition: partition,
-            offset: (parseInt(message.offset) + 1).toString() // 5
+            offset: (parseInt(message.offset) + 1).toString() 
           }])
 
                         

@@ -62,8 +62,9 @@ async function main() {
                     console.log("Missing email or body template in action metadata");
                     return;
                 }
-                const to = parse(emailTemplate, { comment: zapRunMetadata });
-                const body = parse(bodyTemplate, { comment: zapRunMetadata });
+                const templateContext = { data: zapRunMetadata };
+                const to = parse(emailTemplate, { templateContext });
+                const body = parse(bodyTemplate, { templateContext });
                 console.log(`Sending email ${to} with body ${body}`);
                 await sendEmail(to, body, userId);
             }
